@@ -62,7 +62,8 @@ The head of the dataframe is displayed below (I'll note that there's no order to
 
 
 ## Interesting Aggregates
-| **CLIMATE.REGION**          | **Most Customers Affected on Average** | **Most Customers Affected** | **Longest Outage on Average** | **Longest Overall Outages (Total Minutes)** |
+
+| **CLIMATE.REGION** | **Most Customers Affected on Average** | **Most Customers Affected** | **Longest Outage on Average** | **Longest Overall Outages (Total Minutes)** |
 |----------------------------|---------------------------------|--------------------------------|----------------------------|---------------------------|
 | Central                    | system operability disruption   | severe weather                 | fuel supply emergency      | severe weather            |
 | East North Central         | system operability disruption   | severe weather                 | fuel supply emergency      | severe weather            |
