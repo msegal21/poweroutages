@@ -1,4 +1,4 @@
-## Power Outage Analysis
+# Power Outage Analysis
 Portfolio for EECS 398 @ Michigan
 
 # Introduction
@@ -16,6 +16,8 @@ The database contains 1534 rows of data (each row representing an outage) and 57
 
 # Data Cleaning and Exploratory Data Analysis
 
+## Cleaning
+
 1. I began by dropping all rows/columns of overhead — this includes the first row of the dataframe, which specified the units of each column rather than containing data, as well as the first column, which imported junk values as a result of the read into pandas.
 2. I created a singular start time and singular restoration time for every outage by combining the date and time for both the start and restoration, `OUTAGE.START.DATE` + `OUTAGE.START.TIME` and `OUTAGE.RESTORATION.DATE` + `OUTAGE.RESTORATION.TIME`, and casting it with pd.to_datetime to `OUTAGE.START.DT` and `OUTAGE.RESTORATION.DT`. I also created an `OUTAGE.LENGTH` column, which mirrors the `OUTAGE.DURATION` column but lives as a time object rather than numeric value of minutes.
 3. I converted some columns into number types from strings in order to use them for future calculations and sorting operations.
@@ -31,9 +33,53 @@ The head of the dataframe is displayed below (I'll note that there's no order to
 | 2012 | Minnesota  | MRO         | East North Central | -0.1          | severe weather     | 2550.0          | 68200.0             | 2279.0       | 2012-06-19 04:30:00  | 2012-06-20 23:00:00   | 1 days 18:30:00   |
 | 2015 | Minnesota  | MRO         | East North Central | 1.2           | severe weather     | 1740.0          | 250000.0            | 2279.0       | 2015-07-18 02:00:00  | 2015-07-19 07:00:00   | 1 days 05:00:00   |
 
+## Univariate Analysis
 
+<iframe
+  src="assets/nerc-uni.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+<iframe
+  src="assets/nerc-uni-state.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+
+## Bivariate Analysis
+
+<iframe
+  src="assets/nerc-biv.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+
+
+## Interesting Aggregates
+| **CLIMATE.REGION**          | **Most Customers Affected on Average** | **Most Customers Affected** | **Longest Outage on Average** | **Longest Overall Outages (Total Minutes)** |
+|----------------------------|---------------------------------|--------------------------------|----------------------------|---------------------------|
+| Central                    | system operability disruption   | severe weather                 | fuel supply emergency      | severe weather            |
+| East North Central         | system operability disruption   | severe weather                 | fuel supply emergency      | severe weather            |
+| Northeast                  | system operability disruption   | severe weather                 | fuel supply emergency      | severe weather            |
+| Northwest                  | severe weather                  | severe weather                 | severe weather             | severe weather            |
+| South                      | system operability disruption   | severe weather                 | fuel supply emergency      | severe weather            |
+| Southeast                  | severe weather                  | severe weather                 | public appeal              | severe weather            |
+| Southwest                  | system operability disruption   | system operability disruption  | severe weather             | severe weather            |
+| West                       | severe weather                  | severe weather                 | fuel supply emergency      | severe weather            |
+| West North Central         | severe weather                  | severe weather                 | severe weather             | severe weather            |
+
+
+
+## Imputation
 
 # Framing a Prediction Problem
+
 
 # Baseline Model
 
