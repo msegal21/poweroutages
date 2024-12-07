@@ -84,7 +84,9 @@ While there are a few more bivariate analyses in the notebook, I wanted to take 
 
 ## Interesting Aggregates
 
-| **CLIMATE.REGION** | **Most Customers Affected on Average** | **Most Customers Affected** | **Longest Outage on Average** | **Longest Overall Outages (Total Minutes)** |
+The pivot table below highlights, for each climate region, what the cause was behind some of the most significant outages in the dataset, where significance is measured by the most customers affected by one outage and the longest single outage. Additionally, the table shows what cause category, on average, is responsible for the most affected customers and longest outages.
+
+| **Climate Region** | **Most Customers Affected on Average** | **Most Customers Affected** | **Longest Outage on Average** | **Longest Overall Outages (Total Minutes)** |
 |----------------------------|---------------------------------|--------------------------------|----------------------------|---------------------------|
 | Central                    | system operability disruption   | severe weather                 | fuel supply emergency      | severe weather            |
 | East North Central         | system operability disruption   | severe weather                 | fuel supply emergency      | severe weather            |
@@ -100,6 +102,10 @@ While there are a few more bivariate analyses in the notebook, I wanted to take 
 
 ## Imputation
 
+As I approached the prediction problem, I had to impute a few columns that I wanted to use for my model. I imputed the following columns:
+
+1. `CUSTOMERS.AFFECTED`: To impute the number of affected customers, I decided to group the dataset first by the US State and then by cause category, then taking the mean of the resulting groups and filling NaNs with that value. I did this to account for the nearest outage scenario — while NERC regions effectively cover large areas of the U.S., states more accurately encapsulate the population, immediate response, density, etc. for an outage. 
+
 <iframe
   src="assets/ca-imp.html"
   width="800"
@@ -107,12 +113,16 @@ While there are a few more bivariate analyses in the notebook, I wanted to take 
   frameborder="0"
 ></iframe>
 
+2. `OUTAGE.DURATION`: To impute the outage duration, I grouped once again by the US State and then by cause category (this is a particularly good indicator for duration, as storms will take longer than quick maintenance/system failure issues!), but then took the median of the group, as there were significant outliers in dataset in spite of an otherwise very tight distribution, and I didn't want the outliers greatly affecting the imputed values.
+
 <iframe
   src="assets/od-imp.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
+
+3. `ANOMALY.LEVEL`: As anomaly level is an indicator of climate, I grouped by climate region and cause category (cause category was necessary here to make sure I wasn't falsely imputing based on climate when the outage had nothing to do with climatic factors) and imputed with the mean of the group.
 
 <iframe
   src="assets/al-imp.html"
