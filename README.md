@@ -11,7 +11,22 @@ Grid maintenance and outage responses are primarily the responsibility of privat
 
 The database contains 1534 rows of data (each row representing an outage) and 57 columns, but I primarily looked at the following columns for the purposes of this report.
 
-
+|Column                |Description|
+|---                |---        |
+|`'YEAR'`                |Outage year|
+|`'MONTH'`                |Outage month|
+|`'U.S._STATE'`                |State in which the outage occurred|
+|`'NERC.REGION'`                |North American Electric Reliability Corporation region of the outage|
+|`'CLIMATE.REGION'`                |U.S. Climate regions as specified by National Centers for Environmental Information|
+|`'ANOMALY.LEVEL'`                |Oceanic El Niño/La Niña (ONI) index|
+|`'OUTAGE.START.DATE'`                |Day of the year when the outage event started|
+|`'OUTAGE.START.TIME'`                |Time of the day when the outage event started|
+|`'OUTAGE.RESTORATION.DATE'`                |Day of the year when power was restored to all the customers|
+|`'OUTAGE.RESTORATION.TIME'`                |Time of the day when power was restored to all the customers|
+|`'CAUSE.CATEGORY'`                |Categories of all the events causing the major power outages|
+|`'OUTAGE.DURATION'`                |Duration of outage events (in minutes)|
+|`'CUSTOMERS.AFFECTED'`                |Number of customers affected by the power outage event|
+|`'POPDEN_URBAN'`                |Population density of the urban areas (in persons-per-square-mile)|
 
 
 # Data Cleaning and Exploratory Data Analysis
@@ -78,6 +93,28 @@ The head of the dataframe is displayed below (I'll note that there's no order to
 
 
 ## Imputation
+
+<iframe
+  src="assets/ca-imp.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+<iframe
+  src="assets/od-imp.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+<iframe
+  src="assets/al-imp.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
 
 # Framing a Prediction Problem
 
