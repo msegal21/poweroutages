@@ -137,8 +137,13 @@ My goal was to predict the cause category of a given outage based on a handful o
 
 ## Baseline Model
 For the baseline model, I used the following features to predict the `CAUSE.CATEGORY`.
-	`NERC.REGION`: nominal
-	`CUSTOMERS.AFFECTED`: quantitative
+
+
+	`NERC.REGION` (nominal): What region of oversight does the outage fall under? What other outages were the responsibility of this commission?
+
+	`CUSTOMERS.AFFECTED` (quantitative): How many customers were affected by the outage?
+
+
 For the nominal feature, I used sklearn's OneHotEncoder, and for the numeric feature, I used StandardScaler. While I just expected this to be a jumping off point for the model, it actually performed decently well, resulting in a weighted average of a 0.67 F1 score and 0.75 precision score. I think the baseline model wasn't bad, but could certainly be better — it takes in two of the more significant indicators of the nature of an outage: where it is and how many people it affected. (You could probably guess the cause of an outage based on these features with decent accuracy — a large affected customer population in Florida is more likely to be severe weather, whereas a small affected customer population in Pennsylvania is more likely to be an equipment failure.) That said, we have more features at our disposal that appear to be relevant to the cause category, and I therefore explored more with the final model.
 
 
