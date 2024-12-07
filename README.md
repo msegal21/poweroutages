@@ -50,12 +50,16 @@ The head of the dataframe is displayed below (I'll note that there's no order to
 
 ## Univariate Analysis
 
+To start, I looked at the distribution of a handful of the given columns. Below, I wanted to take a look at the overall number of outages per NERC region — NERC regions represent the division of national grid oversight, so I wanted to see if there were any regions with particularly high numbers. It turns out that the Western Electricity Coordinating Council and ReliabilityFirst, which represent the Western U.S. and Midwest respectively, saw the most outages.
+
 <iframe
   src="assets/nerc-uni.html"
   width="800"
   height="600"
   frameborder="0"
 ></iframe>
+
+Out of curiosity, I looked at the same distribution but with states as the divisor rather than NERC regions to see if there were any standouts. It certainly makes sense based on size that California and Texas have outrageously high representation when it comes to number of outages, but it's also worth thinking about if those outages are disproportionate to their size — just by paying attention to current events, it's no secret that California and Texas specifically tend to struggle with their power grids. It's also interesting to note here that, as indicated by the color distribution, representing the NERC regions (one state can be covered by multiple NERC regions), Texas is almost entirely covered by their own NERC commission: TRE. Among the larger states in the U.S., Texas and Florida appear to be among very few states to have their own NERC regions.
 
 <iframe
   src="assets/nerc-uni-state.html"
@@ -66,6 +70,8 @@ The head of the dataframe is displayed below (I'll note that there's no order to
 
 
 ## Bivariate Analysis
+
+While there are a few more bivariate analyses in the notebook, I wanted to take a more detailed look at the univariate distributions by NERC region shown above. The distribution below visualizes the total number of customers affected by outages in each NERC region. The x axis is still laid out in descending order (left to right) of number of outages, but the bars represent customers affected, where each block within a bar is the block of customers affected in a single specific outage. There are a number of interesting observations to be made here, one of which is that the RFC seems to have many power outages that don't affect very varying numbers of customers, whereas regions like the TRE, NPCC, and FRCC appear to have had one or a couple of major outages that disproportionately contribute to their total number of affected customers.
 
 <iframe
   src="assets/nerc-biv.html"
@@ -117,8 +123,9 @@ The head of the dataframe is displayed below (I'll note that there's no order to
 
 
 # Framing a Prediction Problem
-
+My goal was to predict the cause category of a given outage based on a handful of information that might be known at the time of an outage, either during or after the outage — this is a classification prediction problem. During the outage, it would obviously be beneficial to know the cause — it would be much easier to solve the problem given a known cause. However, it could also be beneficial to understand how to identify a specific cause based on information obtained after an outage, as the cause might not be clear at the time of the outage, knowing what broke the grid in hindsight could lead to better, more specific fixes. Therefore, at the time of prediction, I assume that we have access to metrics including but not limited to customers affected and outage duration. While there are a number of available metrics in the notebook classification report, I mainly looked at the F1 score to measure the efficacy of the model, as the variety of causes isn't quite balanced and both false negatives and positives are bear the same weight, making it a good candidate for F1 scores.
 
 # Baseline Model
+
 
 # Final Model
