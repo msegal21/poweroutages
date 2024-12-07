@@ -1,7 +1,7 @@
 # Power Outage Analysis
 Portfolio for EECS 398 @ Michigan
 
-# Introduction
+## Introduction
 
 This project explores and analyzes a database maintained by the Laboratory for Advancing Sustainable Critical Infrastructure at Purdue containing major power outage data in the continental U.S. from January 2000 to July 2016. 
 
@@ -29,9 +29,9 @@ The database contains 1534 rows of data (each row representing an outage) and 57
 |`'POPDEN_URBAN'`                |Population density of the urban areas (in persons-per-square-mile)|
 
 
-# Data Cleaning and Exploratory Data Analysis
+## Data Cleaning and Exploratory Data Analysis
 
-## Cleaning
+### Cleaning
 
 1. I began by dropping all rows/columns of overhead — this includes the first row of the dataframe, which specified the units of each column rather than containing data, as well as the first column, which imported junk values as a result of the read into pandas.
 2. I created a singular start time and singular restoration time for every outage by combining the date and time for both the start and restoration, `OUTAGE.START.DATE` + `OUTAGE.START.TIME` and `OUTAGE.RESTORATION.DATE` + `OUTAGE.RESTORATION.TIME`, and casting it with pd.to_datetime to `OUTAGE.START.DT` and `OUTAGE.RESTORATION.DT`. I also created an `OUTAGE.LENGTH` column, which mirrors the `OUTAGE.DURATION` column but lives as a time object rather than numeric value of minutes.
@@ -48,7 +48,7 @@ The head of the dataframe is displayed below (I'll note that there's no order to
 | 2012 | Minnesota  | MRO         | East North Central | -0.1          | severe weather     | 2550.0          | 68200.0             | 2279.0       | 2012-06-19 04:30:00  | 2012-06-20 23:00:00   | 1 days 18:30:00   |
 | 2015 | Minnesota  | MRO         | East North Central | 1.2           | severe weather     | 1740.0          | 250000.0            | 2279.0       | 2015-07-18 02:00:00  | 2015-07-19 07:00:00   | 1 days 05:00:00   |
 
-## Univariate Analysis
+### Univariate Analysis
 
 To start, I looked at the distribution of a handful of the given columns. Below, I wanted to take a look at the overall number of outages per NERC region — NERC regions represent the division of national grid oversight, so I wanted to see if there were any regions with particularly high numbers. It turns out that the Western Electricity Coordinating Council and ReliabilityFirst, which represent the Western U.S. and Midwest respectively, saw the most outages.
 
@@ -69,7 +69,7 @@ Out of curiosity, I looked at the same distribution but with states as the divis
 ></iframe>
 
 
-## Bivariate Analysis
+### Bivariate Analysis
 
 While there are a few more bivariate analyses in the notebook, I wanted to take a more detailed look at the univariate distributions by NERC region shown above. The distribution below visualizes the total number of customers affected by outages in each NERC region. The x axis is still laid out in descending order (left to right) of number of outages, but the bars represent customers affected, where each block within a bar is the block of customers affected in a single specific outage. There are a number of interesting observations to be made here, one of which is that the RFC seems to have many power outages that don't affect very varying numbers of customers, whereas regions like the TRE, NPCC, and FRCC appear to have had one or a couple of major outages that disproportionately contribute to their total number of affected customers.
 
@@ -82,7 +82,7 @@ While there are a few more bivariate analyses in the notebook, I wanted to take 
 
 
 
-## Interesting Aggregates
+### Interesting Aggregates
 
 The pivot table below highlights, for each climate region, what the cause was behind some of the most significant outages in the dataset, where significance is measured by the most customers affected by one outage and the longest single outage. Additionally, the table shows what cause category, on average, is responsible for the most affected customers and longest outages.
 
@@ -100,11 +100,11 @@ The pivot table below highlights, for each climate region, what the cause was be
 
 
 
-## Imputation
+### Imputation
 
 As I approached the prediction problem, I had to impute a few columns that I wanted to use for my model. I imputed the following columns:
 
-1. `CUSTOMERS.AFFECTED`: To impute the number of affected customers, I decided to group the dataset first by the US State and then by cause category, then taking the mean of the resulting groups and filling NaNs with that value. I did this to account for the nearest outage scenario — while NERC regions effectively cover large areas of the U.S., states more accurately encapsulate the population, immediate response, density, etc. for an outage. 
+`CUSTOMERS.AFFECTED`: To impute the number of affected customers, I decided to group the dataset first by the US State and then by cause category, then taking the mean of the resulting groups and filling NaNs with that value. I did this to account for the nearest outage scenario — while NERC regions effectively cover large areas of the U.S., states more accurately encapsulate the population, immediate response, density, etc. for an outage. 
 
 <iframe
   src="assets/ca-imp.html"
@@ -113,7 +113,7 @@ As I approached the prediction problem, I had to impute a few columns that I wan
   frameborder="0"
 ></iframe>
 
-2. `OUTAGE.DURATION`: To impute the outage duration, I grouped once again by the US State and then by cause category (this is a particularly good indicator for duration, as storms will take longer than quick maintenance/system failure issues!), but then took the median of the group, as there were significant outliers in dataset in spite of an otherwise very tight distribution, and I didn't want the outliers greatly affecting the imputed values.
+`OUTAGE.DURATION`: To impute the outage duration, I grouped once again by the US State and then by cause category (this is a particularly good indicator for duration, as storms will take longer than quick maintenance/system failure issues!), but then took the median of the group, as there were significant outliers in dataset in spite of an otherwise very tight distribution, and I didn't want the outliers greatly affecting the imputed values.
 
 <iframe
   src="assets/od-imp.html"
@@ -122,7 +122,7 @@ As I approached the prediction problem, I had to impute a few columns that I wan
   frameborder="0"
 ></iframe>
 
-3. `ANOMALY.LEVEL`: As anomaly level is an indicator of climate, I grouped by climate region and cause category (cause category was necessary here to make sure I wasn't falsely imputing based on climate when the outage had nothing to do with climatic factors) and imputed with the mean of the group.
+`ANOMALY.LEVEL`: As anomaly level is an indicator of climate, I grouped by climate region and cause category (cause category was necessary here to make sure I wasn't falsely imputing based on climate when the outage had nothing to do with climatic factors) and imputed with the mean of the group.
 
 <iframe
   src="assets/al-imp.html"
@@ -132,10 +132,14 @@ As I approached the prediction problem, I had to impute a few columns that I wan
 ></iframe>
 
 
-# Framing a Prediction Problem
+## Framing a Prediction Problem
 My goal was to predict the cause category of a given outage based on a handful of information that might be known at the time of an outage, either during or after the outage — this is a classification prediction problem. During the outage, it would obviously be beneficial to know the cause — it would be much easier to solve the problem given a known cause. However, it could also be beneficial to understand how to identify a specific cause based on information obtained after an outage, as the cause might not be clear at the time of the outage, knowing what broke the grid in hindsight could lead to better, more specific fixes. Therefore, at the time of prediction, I assume that we have access to metrics including but not limited to customers affected and outage duration. While there are a number of available metrics in the notebook classification report, I mainly looked at the F1 score to measure the efficacy of the model, as the variety of causes isn't quite balanced and both false negatives and positives are bear the same weight, making it a good candidate for F1 scores.
 
-# Baseline Model
+## Baseline Model
+For the baseline model, I used the following features to predict the `CAUSE.CATEGORY`.
+	`NERC.REGION`: nominal
+	`CUSTOMERS.AFFECTED`: quantitative
+For the nominal feature, I used sklearn's OneHotEncoder, and for the numeric feature, I used StandardScaler. While I just expected this to be a jumping off point for the model, it actually performed decently well, resulting in a weighted average of a 0.67 F1 score and 0.75 precision score. I think the baseline model wasn't bad, but could certainly be better — it takes in two of the more significant indicators of the nature of an outage: where it is and how many people it affected. (You could probably guess the cause of an outage based on these features with decent accuracy — a large affected customer population in Florida is more likely to be severe weather, whereas a small affected customer population in Pennsylvania is more likely to be an equipment failure.) That said, we have more features at our disposal that appear to be relevant to the cause category, and I therefore explored more with the final model.
 
 
-# Final Model
+## Final Model
