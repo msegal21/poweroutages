@@ -1,5 +1,6 @@
 # Analyzing Power Outages: A Regional Exploration
 Portfolio for EECS 398 @ Michigan
+
 By Maya Segal (masegal@umich.edu)
 
 ## Introduction
