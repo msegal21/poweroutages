@@ -1,4 +1,4 @@
-# Power Outage Analysis
+# Analyzing Power Outages: A Regional Exploration
 Portfolio for EECS 398 @ Michigan
 
 ## Introduction
@@ -139,9 +139,9 @@ My goal was to predict the cause category of a given outage based on a handful o
 For the baseline model, I used a Random Forest Classifier and the following features to predict the `CAUSE.CATEGORY`.
 
 
-	`NERC.REGION` (nominal): What region of oversight does the outage fall under? What other outages were the responsibility of this commission?
+- **`NERC.REGION`** (nominal): What region of oversight does the outage fall under? What other outages were the responsibility of this commission?
 
-	`CUSTOMERS.AFFECTED` (quantitative): How many customers were affected by the outage?
+- **`CUSTOMERS.AFFECTED`** (quantitative): How many customers were affected by the outage?
 
 
 For the nominal feature, I used sklearn's OneHotEncoder, and for the numeric feature, I used StandardScaler. While I just expected this to be a jumping off point for the model, it actually performed decently well, resulting in a weighted average of a 0.67 F1 score and 0.75 precision score. I think the baseline model wasn't bad, but could certainly be better — it takes in two of the more significant indicators of the nature of an outage: where it is and how many people it affected. (You could probably guess the cause of an outage based on these features with decent accuracy — a large affected customer population in Florida is more likely to be severe weather, whereas a small affected customer population in Pennsylvania is more likely to be an equipment failure.) That said, we have more features at our disposal that appear to be relevant to the cause category, and I therefore explored more with the final model.
@@ -168,9 +168,9 @@ I chose to include these additional features because, as seen by the questions t
 
 I used GridSearchCV to tune hyperparameters, and found that the best parameters for the classifier include:
 
-	- min_samples_split: 4 (we want to balance how often we split the trees to avoid under/overfitting)
-	- max_depth: 10 (to ensure the depth doesn't result in under or overfitting the data)
-	- n_estimators: 31 (finding the sweet spot of number of trees to aggregate)
-	- class_weight: 'balanced' (will balancing the dataset improve performance (instead of None)?)
+- **min_samples_split**: 4 (we want to balance how often we split the trees to avoid under/overfitting)
+- **max_depth**: 10 (to ensure the depth doesn't result in under or overfitting the data)
+- **n_estimators**: 31 (finding the sweet spot of number of trees to aggregate)
+- **class_weight**: 'balanced' (will balancing the dataset improve performance (instead of None)?)
 
 To assess the performance of this model, we can look to the F1 score of 0.84 (and a precision of 0.86). Based on the F1 score, we can see a significant improvement from the baseline model, indicating the final model is more successful.
