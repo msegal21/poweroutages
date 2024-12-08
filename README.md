@@ -148,20 +148,20 @@ For the nominal feature, I used sklearn's OneHotEncoder, and for the numeric fea
 
 
 ## Final Model
-My final model included the following features to predict the `CAUSE.CATEGORY` (I also indicate the unknowns each feature serves to answer/how they contribute to the model's accuracy):
+My final model included the following features to predict the `CAUSE.CATEGORY` (I also indicate the unknowns each feature serves to fill in/how they contribute to the model's accuracy):
 
+- **`NERC.REGION`** (nominal): What region of oversight does the outage fall under? What other outages were the responsibility of this commission?
+  
+- **`CUSTOMERS.AFFECTED`** (quantitative): How many customers were affected by the outage?
 
-	`NERC.REGION` (nominal): What region of oversight does the outage fall under? What other outages were the responsibility of this commission?
+- **`YEAR`** (ordinal): When was the outage? *Note that year is a tricky variable because it does represent (hopefully) a sort of measurable progression factor for the grid's performance despite being ordinal.*
 
-	`CUSTOMERS.AFFECTED` (quantitative): How many customers were affected by the outage?
-	
-	`YEAR` (ordinal): When was the outage? *Note that year is a tricky variable because it does represent (hopefully) a sort of measurable progression factor for the grid's performance despite being ordinal
+- **`ANOMALY.LEVEL`** (quantitative): How rare/unexpected was the outage?
 
-	`ANOMALY.LEVEL` (quantitative): How rare/unexpected was the outage?
+- **`POPDEN_URBAN`** (quantitative): How dense is the population of affected customers?
 
-	`POPDEN_URBAN` (quantitative): How dense is the population of affected customers?
+- **`OUTAGE.DURATION`** (quantitative): How long did the outage last?
 
-	`OUTAGE.DURATION` (quantitative): How long did the outage last?
 
 
 I chose to include these additional features because, as seen by the questions they each answer, they all provide further information that could hint at the reason for a given outage. I again used a Random Forest Classifier. For preprocessing, I used PolynomialFeatures for the population density and affected customers variables, hoping to capture any interaction between the two. I used the StandardScaler for the remaining numeric features (`CUSTOMERS.AFFECTED`, `YEAR`, `ANOMALY.LEVEL`, `POPDEN_URBAN`, 'OUTAGE.DURATION`) so as to standardize them all and prevent bias as a result of their varying magnitudes. I used a OneHotEncoder once again on `NERC.REGION`.
