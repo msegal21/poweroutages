@@ -7,7 +7,7 @@ This project explores and analyzes a database maintained by the Laboratory for A
 
 As a foundation of the U.S.'s infrastructure, power grid failures have the potential to severely disrupt the lives and livelihoods of Americans; in particular, the last five years have seen a number of major failures. In 2021, Texas saw unexpected winter storm systems that overwhelmed their poorly-kept grid, which, in conjunction with poor crisis management by lawmakers and power companies, ended up affecting more than 4.5 million customers. I'm particularly interested in this dataset as a native Californian; PG&E is notorious for their mishandling of line maintenance and outage response. Not only does California tend to experience more outages than most other states in the U.S., but downed PG&E lines have directly resulted in some of the most devastating wildfires in recent years. (This set of fires notably includes the Kincade Fire in Sonoma County and the Dixie Fire, which spanned more than 5 counties in Northern California and is California's second largest fire ever as of December 2024.)
 
-Grid maintenance and outage responses are primarily the responsibility of private companies operated on a (largely) state-by-state basis, and I was therefore curious to explore the dataset and see how outages varied state-by-state and region-by-region. After cleaning the dataset, I first performed some exploratory data analysis to understand the primary locations and causes of the included outages. I then designed a model to predict INSERT MODEL STUFF.
+Grid maintenance and outage responses are primarily the responsibility of private companies operated on a (largely) state-by-state basis, and I was therefore curious to explore the dataset and see how outages varied state-by-state and region-by-region.  Specifically, I wanted to explore how outages are handled by each of the different commissions in NERC, which includes looking at the number of customers affected by outages by region, the length of outages in each region, and what's causing outages in each region (i.e. what could the maintenance commissions/companies be better looking out for?)After cleaning the dataset, I first performed some exploratory data analysis to understand the primary locations and causes of the included outages. I then designed a model to predict the cause category of an outage based on some key indicators (region, duration, year, customers affected, etc.).
 
 The database contains 1534 rows of data (each row representing an outage) and 57 columns, but I primarily looked at the following columns for the purposes of this report.
 
@@ -133,7 +133,7 @@ As I approached the prediction problem, I had to impute a few columns that I wan
 
 
 ## Framing a Prediction Problem
-My goal was to predict the cause category of a given outage based on a handful of information that might be known at the time of an outage, either during or after the outage — this is a multi-class classification problem. During the outage, it would obviously be beneficial to know the cause — it would be much easier to solve the problem given a known cause. However, it could also be beneficial to understand how to identify a specific cause based on information obtained after an outage, as the cause might not be clear at the time of the outage, knowing what broke the grid in hindsight could lead to better, more specific fixes. Therefore, at the time of prediction, I assume that we have access to metrics including but not limited to customers affected and outage duration. While there are a number of available metrics in the notebook classification report, I mainly looked at the F1 score to measure the efficacy of the model, as the variety of causes isn't quite balanced and both false negatives and positives are bear the same weight, making it a good candidate for F1 scores.
+My goal was to predict the cause category of a given outage based on a handful of information that might be known at the time of an outage, either during or after the outage — this is a multiclass classification problem. During the outage, it would obviously be beneficial to know the cause — it would be much easier to solve the problem given a known cause. However, it could also be beneficial to understand how to identify a specific cause based on information obtained after an outage, as the cause might not be clear at the time of the outage, knowing what broke the grid in hindsight could lead to better, more specific fixes. Therefore, at the time of prediction, I assume that we have access to metrics including but not limited to customers affected and outage duration. While there are a number of available metrics in the notebook classification report, I mainly looked at the F1 score to measure the efficacy of the model, as the variety of causes isn't quite balanced and both false negatives and positives are bear the same weight, making it a good candidate for F1 scores.
 
 ## Baseline Model
 For the baseline model, I used a Random Forest Classifier and the following features to predict the `CAUSE.CATEGORY`.
@@ -148,7 +148,7 @@ For the nominal feature, I used sklearn's OneHotEncoder, and for the numeric fea
 
 
 ## Final Model
-My final model included the following features to predict the `CAUSE.CATEGORY`.
+My final model included the following features to predict the `CAUSE.CATEGORY` (I also indicate the unknowns each feature serves to answer/how they contribute to the model's accuracy):
 
 
 	`NERC.REGION` (nominal): What region of oversight does the outage fall under? What other outages were the responsibility of this commission?
@@ -168,9 +168,9 @@ I chose to include these additional features because, as seen by the questions t
 
 I used GridSearchCV to tune hyperparameters, and found that the best parameters for the classifier include:
 
-	- min_samples_leaf: 1
-	- min_samples_split: 4
-	- n_estimators: 31
-	- class_weight: 'balanced'
+	- min_samples_split: 4 (we want to balance how often we split the trees to avoid under/overfitting)
+	- max_depth: 10 (to ensure the depth doesn't result in under or overfitting the data)
+	- n_estimators: 31 (finding the sweet spot of number of trees to aggregate)
+	- class_weight: 'balanced' (will balancing the dataset improve performance (instead of None)?)
 
 To assess the performance of this model, we can look to the F1 score of 0.84 (and a precision of 0.86). Based on the F1 score, we can see a significant improvement from the baseline model, indicating the final model is more successful.
